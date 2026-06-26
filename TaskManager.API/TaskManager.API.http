@@ -1,0 +1,74 @@
+@TaskManager.API_HostAddress = http://localhost:5000
+@token = YOUR_JWT_TOKEN_HERE
+
+### Register a new user
+POST {{TaskManager.API_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "password": "Password123!"
+}
+
+### Login user (captures token if using Visual Studio or VS Code REST Client)
+# @name login
+POST {{TaskManager.API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "Password123!"
+}
+
+### Get current user info (requires token)
+GET {{TaskManager.API_HostAddress}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Get Dashboard stats (requires token)
+GET {{TaskManager.API_HostAddress}}/api/tasks/dashboard
+Authorization: Bearer {{token}}
+
+### Get Tasks list (requires token)
+GET {{TaskManager.API_HostAddress}}/api/tasks
+Authorization: Bearer {{token}}
+
+### Create a Task (requires token)
+POST {{TaskManager.API_HostAddress}}/api/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Complete Project Proposal",
+  "description": "Draft the initial project documentation and architectural review.",
+  "priority": 1,
+  "dueDate": "2026-07-01T12:00:00Z"
+}
+
+### Get specific Task (requires token - replace GUID with actual id)
+GET {{TaskManager.API_HostAddress}}/api/tasks/YOUR_TASK_GUID_HERE
+Authorization: Bearer {{token}}
+
+### Update Task (requires token - replace GUID with actual id)
+PUT {{TaskManager.API_HostAddress}}/api/tasks/YOUR_TASK_GUID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Updated Project Proposal",
+  "description": "Revised project proposal with partner feedback.",
+  "priority": 2,
+  "dueDate": "2026-07-05T12:00:00Z"
+}
+
+### Update Task Status (requires token - replace GUID with actual id)
+# Status values: 0 = Todo, 1 = InProgress, 2 = Done
+PATCH {{TaskManager.API_HostAddress}}/api/tasks/YOUR_TASK_GUID_HERE/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+1
+
+### Delete Task (requires token - replace GUID with actual id)
+DELETE {{TaskManager.API_HostAddress}}/api/tasks/YOUR_TASK_GUID_HERE
+Authorization: Bearer {{token}}

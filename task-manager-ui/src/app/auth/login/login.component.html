@@ -1,0 +1,56 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="brand-logo">🗂</span>
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Please log in to your account</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="alert alert-danger" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+          type="email" 
+          id="email" 
+          formControlName="email" 
+          placeholder="yourname@example.com" 
+          class="form-control"
+          [class.is-invalid]="form.get('email')?.touched && form.get('email')?.invalid"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+          <span *ngIf="form.get('email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="form.get('email')?.errors?.['email']">Please enter a valid email.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password" 
+          placeholder="••••••••" 
+          class="form-control"
+          [class.is-invalid]="form.get('password')?.touched && form.get('password')?.invalid"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+          <span *ngIf="form.get('password')?.errors?.['required']">Password is required.</span>
+          <span *ngIf="form.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
+        {{ loading ? 'Logging in...' : 'Log In' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Don't have an account?</span>
+      <a routerLink="/auth/register">Sign Up</a>
+    </div>
+  </div>
+</div>

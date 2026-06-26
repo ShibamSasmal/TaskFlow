@@ -1,0 +1,81 @@
+<div class="form-container">
+  <div class="form-card">
+    <header class="form-header">
+      <h2>{{ isEditMode ? 'Edit Task Details' : 'Create New Task' }}</h2>
+      <p class="subtitle">{{ isEditMode ? 'Modify your task settings below' : 'Add a new task to organize your day' }}</p>
+    </header>
+
+    <div class="loading-spinner" *ngIf="loading && isEditMode">
+      <div class="spinner"></div>
+      <p>Retrieving task details...</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="task-form" *ngIf="!loading || !isEditMode">
+      <div class="alert alert-danger" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <label for="title">Task Title *</label>
+        <input 
+          type="text" 
+          id="title" 
+          formControlName="title" 
+          placeholder="e.g. Fix login bug" 
+          class="form-control"
+          [class.is-invalid]="form.get('title')?.touched && form.get('title')?.invalid"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+          <span *ngIf="form.get('title')?.errors?.['required']">Title is required.</span>
+          <span *ngIf="form.get('title')?.errors?.['maxlength']">Title cannot exceed 200 characters.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+          id="description" 
+          formControlName="description" 
+          placeholder="Describe what needs to be done..." 
+          class="form-control text-area"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col">
+          <label for="priority">Priority</label>
+          <select id="priority" formControlName="priority" class="form-control">
+            <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+          </select>
+        </div>
+
+        <div class="form-group col" *ngIf="isEditMode">
+          <label for="status">Status</label>
+          <select id="status" formControlName="status" class="form-control">
+            <option value="Todo">Todo</option>
+            <option value="InProgress">In Progress</option>
+            <option value="Done">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="dueDate">Due Date</label>
+        <input 
+          type="date" 
+          id="dueDate" 
+          formControlName="dueDate" 
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/tasks" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ isEditMode ? 'Save Changes' : 'Create Task' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

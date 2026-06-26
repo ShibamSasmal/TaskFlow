@@ -1,0 +1,55 @@
+<div class="task-card" [class.overdue]="task.isOverdue && task.status !== 'Done'" [class.completed]="task.status === 'Done'">
+  <div class="task-card-header">
+    <div class="title-section">
+      <h3 class="task-title">{{ task.title }}</h3>
+      <p class="task-desc" *ngIf="task.description">{{ task.description }}</p>
+    </div>
+    <div class="badges-section">
+      <app-priority-badge [priority]="task.priority"></app-priority-badge>
+      <app-status-badge [status]="task.status"></app-status-badge>
+    </div>
+  </div>
+
+  <div class="task-card-footer">
+    <div class="date-section">
+      <ng-container *ngIf="task.dueDate; else noDueDate">
+        <span class="due-date">
+          <svg class="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Due: {{ task.dueDate | date:'mediumDate' }}
+        </span>
+        <span class="overdue-warning" *ngIf="task.isOverdue && task.status !== 'Done'">
+          ⚠️ Overdue
+        </span>
+      </ng-container>
+      <ng-template #noDueDate>
+        <span class="no-due">No due date</span>
+      </ng-template>
+    </div>
+
+    <div class="actions-section">
+      <!-- Status Actions -->
+      <button class="btn btn-sm btn-status" *ngIf="task.status === 'Todo'" (click)="onStart()">
+        ▶ Start
+      </button>
+      <button class="btn btn-sm btn-status" *ngIf="task.status === 'InProgress'" (click)="onComplete()">
+        ✓ Done
+      </button>
+      <button class="btn btn-sm btn-secondary" *ngIf="task.status === 'Done'" (click)="onReopen()">
+        ↺ Reopen
+      </button>
+
+      <!-- Edit/Delete Actions -->
+      <a [routerLink]="['/tasks', task.id, 'edit']" class="btn btn-sm btn-edit">
+        Edit
+      </a>
+      <button class="btn btn-sm btn-danger" [disabled]="deleting" (click)="onDelete()">
+        {{ deleting ? '...' : 'Delete' }}
+      </button>
+    </div>
+  </div>
+</div>

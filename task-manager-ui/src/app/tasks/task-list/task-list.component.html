@@ -1,0 +1,134 @@
+<div class="task-manager-layout">
+  <!-- Sidebar Filters -->
+  <aside class="filters-sidebar">
+    <div class="sidebar-header">
+      <h3>🔍 Filters</h3>
+      <button class="btn btn-text" (click)="resetFilters()">Reset All</button>
+    </div>
+
+    <div class="filter-group">
+      <label for="search">Search Keywords</label>
+      <input 
+        type="text" 
+        id="search" 
+        [(ngModel)]="filter.search" 
+        (ngModelChange)="onFilterChange()" 
+        placeholder="Search title, description..." 
+        class="form-control"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label>Status</label>
+      <select [(ngModel)]="filter.status" (ngModelChange)="onFilterChange()" class="form-control">
+        <option [ngValue]="undefined">All Statuses</option>
+        <option [ngValue]="0">Todo</option>
+        <option [ngValue]="1">In Progress</option>
+        <option [ngValue]="2">Completed</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Priority</label>
+      <select [(ngModel)]="filter.priority" (ngModelChange)="onFilterChange()" class="form-control">
+        <option [ngValue]="undefined">All Priorities</option>
+        <option [ngValue]="0">Low</option>
+        <option [ngValue]="1">Medium</option>
+        <option [ngValue]="2">High</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="dueAfter">Due After</label>
+      <input 
+        type="date" 
+        id="dueAfter" 
+        [(ngModel)]="filter.dueAfter" 
+        (ngModelChange)="onFilterChange()" 
+        class="form-control"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="dueBefore">Due Before</label>
+      <input 
+        type="date" 
+        id="dueBefore" 
+        [(ngModel)]="filter.dueBefore" 
+        (ngModelChange)="onFilterChange()" 
+        class="form-control"
+      />
+    </div>
+  </aside>
+
+  <!-- Main Tasks List -->
+  <main class="tasks-main">
+    <header class="tasks-header">
+      <div class="header-title">
+        <h2>My Task Workspace</h2>
+        <span class="task-count-badge" *ngIf="!loading">{{ totalCount }} total</span>
+      </div>
+      <a routerLink="/tasks/new" class="btn btn-primary">+ New Task</a>
+    </header>
+
+    <!-- Sorting Controls -->
+    <div class="sorting-controls" *ngIf="tasks.length > 0">
+      <div class="sort-field">
+        <label for="sortBy">Sort By</label>
+        <select id="sortBy" [(ngModel)]="filter.sortBy" (ngModelChange)="loadTasks()" class="form-control form-control-sm">
+          <option value="createdAt">Created Date</option>
+          <option value="dueDate">Due Date</option>
+          <option value="priority">Priority</option>
+          <option value="title">Title</option>
+        </select>
+      </div>
+
+      <button class="btn btn-sort-direction" (click)="filter.sortDescending = !filter.sortDescending; loadTasks()">
+        {{ filter.sortDescending ? 'Descending ⇣' : 'Ascending ⇡' }}
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-spinner" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Synchronizing task list...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="alert alert-danger" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <!-- Tasks Grid -->
+    <ng-container *ngIf="!loading && !error">
+      <div class="tasks-list" *ngIf="tasks.length > 0; else noTasks">
+        <app-task-card 
+          *ngFor="let task of tasks" 
+          [task]="task"
+          (statusChange)="onStatusChange(task, $event)"
+          (delete)="loadTasks()">
+        </app-task-card>
+      </div>
+
+      <!-- Empty State -->
+      <ng-template #noTasks>
+        <div class="empty-state">
+          <span class="empty-icon">📂</span>
+          <h3>No tasks found</h3>
+          <p>Try refining your filters or create a new task to get started.</p>
+        </div>
+      </ng-template>
+
+      <!-- Pagination Footer -->
+      <footer class="pagination-footer" *ngIf="totalPages > 1">
+        <button class="btn btn-pagination" [disabled]="filter.page === 1" (click)="onPageChange(filter.page - 1)">
+          ‹ Previous
+        </button>
+        <span class="page-indicator">Page {{ filter.page }} of {{ totalPages }}</span>
+        <button class="btn btn-pagination" [disabled]="filter.page === totalPages" (click)="onPageChange(filter.page + 1)">
+          Next ›
+        </button>
+      </footer>
+    </ng-container>
+  </main>
+</div>

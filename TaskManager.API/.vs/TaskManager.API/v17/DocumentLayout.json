@@ -1,0 +1,45 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\TaskFlow\\TaskManager.API\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{094DDE61-C7B1-57AB-B464-6EFC1C33B56C}|TaskManager.API.csproj|c:\\users\\hp\\desktop\\taskflow\\taskmanager.api\\taskmanager.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{094DDE61-C7B1-57AB-B464-6EFC1C33B56C}|TaskManager.API.csproj|solutionrelative:taskmanager.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TaskManager.API",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\TaskFlow\\TaskManager.API\\TaskManager.API.csproj",
+              "RelativeDocumentMoniker": "TaskManager.API.csproj",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\TaskFlow\\TaskManager.API\\TaskManager.API.csproj",
+              "RelativeToolTip": "TaskManager.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-25T19:36:13.038Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
