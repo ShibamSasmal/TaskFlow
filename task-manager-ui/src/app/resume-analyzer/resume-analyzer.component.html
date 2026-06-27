@@ -1,0 +1,120 @@
+<div class="analyzer-container">
+  <header class="analyzer-header">
+    <div>
+      <h1>AI Resume Analyzer</h1>
+      <p class="subtitle">Evaluate your resume, uncover skill gaps, and get instant suggestions to align with job benchmarks</p>
+    </div>
+  </header>
+
+  <div class="analyzer-grid">
+    <!-- Left Column: Upload Panel -->
+    <div class="glass-card upload-panel">
+      <h2>Upload & Analyze</h2>
+      <p class="section-desc">Select a target career path and upload your resume to generate a quality report.</p>
+
+      <form (submit)="onSubmit()" class="upload-form">
+        <!-- Target Role Dropdown -->
+        <div class="form-group">
+          <label for="role-select">Target Career Role</label>
+          <select 
+            id="role-select" 
+            name="selectedRole" 
+            [(ngModel)]="selectedRole" 
+            class="form-control"
+            [disabled]="uploading">
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+
+        <!-- Drag & Drop Area -->
+        <div 
+          class="drag-drop-zone"
+          [class.drag-over]="isDragOver"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          *ngIf="!selectedFile">
+          <input 
+            type="file" 
+            id="file-input" 
+            (change)="onFileSelected($event)" 
+            accept=".pdf,.docx" 
+            class="hidden-input" />
+          <label for="file-input" class="file-label">
+            <span class="upload-icon">📄</span>
+            <span class="upload-text">Drag and drop your resume here, or <strong class="browse-link">browse</strong></span>
+            <span class="file-types">Supports PDF and DOCX (Max 5MB)</span>
+          </label>
+        </div>
+
+        <!-- Selected File Preview -->
+        <div class="selected-file-card" *ngIf="selectedFile">
+          <div class="file-info">
+            <span class="doc-icon">📄</span>
+            <div class="file-details">
+              <span class="file-name">{{ selectedFile.name }}</span>
+              <span class="file-size">{{ (selectedFile.size / 1024 / 1024) | number:'1.2-2' }} MB</span>
+            </div>
+          </div>
+          <button type="button" class="btn-remove" (click)="removeFile()" [disabled]="uploading" title="Remove file">✕</button>
+        </div>
+
+        <!-- Feedback Alert -->
+        <div class="alert alert-danger" *ngIf="error">
+          {{ error }}
+        </div>
+
+        <!-- Actions -->
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-block btn-submit" 
+          [disabled]="!selectedFile || !selectedRole || uploading">
+          <span *ngIf="!uploading">⚡ Run AI Analysis</span>
+          <span *ngIf="uploading" class="loading-state">
+            <span class="spinner-small"></span> Parsing & analyzing resume...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Right Column: Scan History -->
+    <div class="glass-card history-panel">
+      <h2>Scan History</h2>
+      <p class="section-desc">Access your previously analyzed resumes and quality scores.</p>
+
+      <!-- Loading State -->
+      <div class="history-loading" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Fetching previous reports...</p>
+      </div>
+
+      <!-- History List -->
+      <div class="history-list" *ngIf="!loading && history.length > 0">
+        <div class="history-item" *ngFor="let item of history">
+          <div class="history-details">
+            <h3 class="history-file">{{ item.fileName }}</h3>
+            <div class="history-meta">
+              <span class="badge-role">{{ item.targetRole }}</span>
+              <span class="meta-dot">•</span>
+              <span class="meta-date">{{ item.processedAt | date:'mediumDate' }}</span>
+            </div>
+          </div>
+          <div class="history-score-area">
+            <div class="score-badge" [class]="'grade-' + item.scoreGrade.toLowerCase()">
+              <span class="badge-number">{{ item.overallScore }}</span>
+              <span class="badge-label">Grade {{ item.scoreGrade }}</span>
+            </div>
+            <a [routerLink]="['/resume-analyzer/analysis', item.analysisId]" class="btn btn-secondary btn-sm">View</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-history" *ngIf="!loading && history.length === 0">
+        <span class="empty-icon">📂</span>
+        <h3>No scans yet</h3>
+        <p>Analyzed resumes will be listed here. Upload a resume to get started!</p>
+      </div>
+    </div>
+  </div>
+</div>

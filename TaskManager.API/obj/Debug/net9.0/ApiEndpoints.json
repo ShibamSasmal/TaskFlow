@@ -42,6 +42,63 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "TaskManager.API.Controllers.ResumeController",
+    "Method": "GetAnalysis",
+    "RelativePath": "api/Resume/analysis/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.ResumeController",
+    "Method": "Analyze",
+    "RelativePath": "api/Resume/analyze",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "targetRole",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.ResumeController",
+    "Method": "GetHistory",
+    "RelativePath": "api/Resume/history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.ResumeController",
+    "Method": "GetRoles",
+    "RelativePath": "api/Resume/roles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "TaskManager.API.Controllers.TasksController",
     "Method": "GetTasks",
     "RelativePath": "api/Tasks",

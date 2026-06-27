@@ -6,6 +6,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { TaskListComponent } from './tasks/task-list/task-list.component';
 import { TaskFormComponent } from './tasks/task-form/task-form.component';
 import { AuthGuard } from './shared/guards/auth.guard';
+import { ResumeAnalyzerComponent } from './resume-analyzer/resume-analyzer.component';
+import { AnalysisDetailComponent } from './resume-analyzer/analysis-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -28,6 +30,14 @@ const routes: Routes = [
       { path: '', component: TaskListComponent },
       { path: 'new', component: TaskFormComponent },
       { path: ':id/edit', component: TaskFormComponent }
+    ]
+  },
+  {
+    path: 'resume-analyzer',
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', component: ResumeAnalyzerComponent },
+      { path: 'analysis/:id', component: AnalysisDetailComponent }
     ]
   },
   { path: '**', redirectTo: '/dashboard' }

@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
         <div class="navbar-menu" *ngIf="authService.isAuthenticated()">
           <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
           <a class="nav-link" routerLink="/tasks" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Tasks</a>
+          <a class="nav-link" routerLink="/resume-analyzer" routerLinkActive="active">Resume Analyzer</a>
         </div>
 
         <div class="navbar-actions">

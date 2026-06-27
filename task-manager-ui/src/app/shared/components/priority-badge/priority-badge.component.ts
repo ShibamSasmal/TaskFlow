@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-priority-badge',
   standalone: false,
   template: `
-    <span class="badge priority-badge" [ngClass]="priority?.toLowerCase() || 'medium'">
+    <span class="badge priority-badge" [ngClass]="priority.toLowerCase() || 'medium'">
       {{ priority || 'Medium' }}
     </span>
   `,

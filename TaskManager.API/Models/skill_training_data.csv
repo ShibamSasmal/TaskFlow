@@ -1,0 +1,43 @@
+ResumeText,SkillLabel
+"Experienced C# and dotnet developer.",C#
+"Hands on experience in C# syntax and generic programming.",C#
+"Writing clean C# asynchronous code with async await.",C#
+"Developed enterprise REST APIs with ASP.NET Core.",ASP.NET Core
+"Designed middleware and dependency injection in ASP.NET Core.",ASP.NET Core
+"Built backend services utilizing ASP.NET Core Web API.",ASP.NET Core
+"Proficient in writing complex SQL queries and databases.",SQL
+"Relational database schema modeling and SQL performance tuning.",SQL
+"Created indexes, views, and stored procedures in SQL Server.",SQL
+"Designed responsive interfaces with Angular 17.",Angular
+"Created Angular components, Directives, and custom Pipes.",Angular
+"Managed application states using RxJS and Services in Angular.",Angular
+"Implemented modern TypeScript interfaces and classes.",TypeScript
+"Type-safe frontend development utilizing TypeScript structures.",TypeScript
+"Strong TypeScript programmer with solid design patterns.",TypeScript
+"Deployed applications inside lightweight Docker containers.",Docker
+"Configured multi-stage Dockerfiles and container registries.",Docker
+"Containerized dotnet application services using Docker.",Docker
+"Highly collaborative with excellent communication skills.",Communication
+"Delivered technical presentations with clear communication.",Communication
+"Facilitated sprint planning and client communication.",Communication
+"Experienced leader directing team milestones and projects.",Leadership
+"Served as scrum master and technical project lead.",Leadership
+"Mentored junior developers and led team sprints.",Leadership
+"Version control commits and repository merging in Git.",Git
+"Resolving branch conflicts and rebasing code inside Git.",Git
+"Extensive usage of Git, GitHub, and Pull Request reviews.",Git
+"Configured CI/CD automated deployment pipelines.",CI/CD
+"Managed GitLab CI, GitHub Actions and Jenkins pipelines.",CI/CD
+"Automated unit testing checks inside CI/CD processes.",CI/CD
+"Designed microservices using Docker, Kubernetes, and Azure.",Microservices
+"Refactored monolith systems into scalable distributed microservices.",Microservices
+"Implemented API Gateway patterns for backend microservices.",Microservices
+"Deploying apps on Microsoft Azure app services.",Azure
+"Configured CosmosDB and Azure Functions cloud services.",Azure
+"Deploying scalable cloud compute instances in AWS.",AWS
+"Configured AWS S3 buckets and RDS database servers.",AWS
+"Experienced Python developer using Django and Pandas.",Python
+"Data analysis scripting utilizing Python and numpy.",Python
+"Created clean user interfaces with HTML and CSS.",HTML
+"Developed beautiful layouts using HTML5 and SCSS styles.",CSS
+"Designed responsive flexbox layout grids using custom CSS.",CSS

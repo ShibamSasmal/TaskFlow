@@ -15,6 +15,8 @@ using TaskManager.API.Repositories;
 using TaskManager.API.Repositories.Interfaces;
 using TaskManager.API.Services;
 using TaskManager.API.Services.Interfaces;
+using TaskManager.API.Services.ML;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,14 @@ builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddSingleton<JwtHelper>();
+
+// Register Resume Analyzer Services
+var modelPath = Path.Combine(builder.Environment.ContentRootPath, "models", "skill_model.zip");
+builder.Services.AddSingleton(sp => new SkillPredictor(modelPath));
+builder.Services.AddScoped<IResumeParserService, ResumeParserService>();
+builder.Services.AddScoped<ISkillAnalyzerService, SkillAnalyzerService>();
+builder.Services.AddScoped<IScoringService, ScoringService>();
+builder.Services.AddScoped<ISuggestionService, SuggestionService>();
 
 // 3. Configure CORS using allowed origins from config
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
@@ -134,7 +144,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// 6. Automatically run database migrations at startup
+// 6. Automatically run database migrations and resume training at startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -143,12 +153,19 @@ using (var scope = app.Services.CreateScope())
         var context = services.GetRequiredService<AppDbContext>();
         context.Database.Migrate();
         Console.WriteLine("PostgreSQL Database Migration successfully executed.");
+
+        // Seed Resume Analyzer Taxonomy & Train Model
+        var env = services.GetRequiredService<IHostEnvironment>();
+        var modelFilePath = Path.Combine(env.ContentRootPath, "models", "skill_model.zip");
+        var csvFilePath = Path.Combine(env.ContentRootPath, "models", "skill_training_data.csv");
+        ResumeDbSeeder.SeedAndTrainAsync(app, modelFilePath, csvFilePath).GetAwaiter().GetResult();
+        Console.WriteLine("Resume Analyzer seeding and model training check completed.");
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred during database migration on startup.");
-        Console.WriteLine($"Database Migration failed: {ex.Message}");
+        logger.LogError(ex, "An error occurred during database migration/seeding on startup.");
+        Console.WriteLine($"Database Migration/Seeding failed: {ex.Message}");
     }
 }
 

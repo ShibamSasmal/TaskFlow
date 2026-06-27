@@ -1,0 +1,210 @@
+<div class="detail-container" *ngIf="analysis">
+  <!-- Top bar / Navigation -->
+  <div class="top-nav">
+    <a routerLink="/resume-analyzer" class="btn-back">
+      <span class="back-icon">←</span> Back to Analyzer
+    </a>
+    <div class="meta-info">
+      <span>Processed on <strong>{{ analysis.processedAt | date:'medium' }}</strong></span>
+    </div>
+  </div>
+
+  <header class="detail-header">
+    <div class="header-main">
+      <div class="file-badge">📄</div>
+      <div>
+        <h1>{{ analysis.fileName }}</h1>
+        <div class="role-badge">Target Role: <strong>{{ analysis.targetRole }}</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Analysis Dashboard Grid -->
+  <div class="detail-grid">
+    <!-- Left Column: Scores and Breakdowns -->
+    <div class="left-col">
+      <!-- Overall Score Card -->
+      <div class="glass-card score-card">
+        <h2>Overall Resume Score</h2>
+        <p class="card-desc">Calculated score based on benchmarks and content criteria.</p>
+
+        <div class="score-visual">
+          <!-- Circular SVG Gauge -->
+          <div class="gauge-container">
+            <svg viewBox="0 0 100 100" class="gauge-svg">
+              <circle cx="50" cy="50" r="45" class="gauge-bg-circle"></circle>
+              <circle 
+                cx="50" 
+                cy="50" 
+                r="45" 
+                class="gauge-fg-circle"
+                [class]="'grade-' + analysis.scoreGrade.toLowerCase()"
+                [style.strokeDashoffset]="strokeDashoffset">
+              </circle>
+            </svg>
+            <div class="gauge-text">
+              <span class="gauge-number">{{ analysis.overallScore }}</span>
+              <span class="gauge-label">Grade {{ analysis.scoreGrade }}</span>
+            </div>
+          </div>
+
+          <div class="score-evaluation">
+            <h3 [class]="'text-grade-' + analysis.scoreGrade.toLowerCase()">
+              {{ analysis.scoreGrade === 'A' ? 'Excellent Match!' : 
+                 analysis.scoreGrade === 'B' ? 'Good Profile!' : 
+                 analysis.scoreGrade === 'C' ? 'Average Fit' : 
+                 analysis.scoreGrade === 'D' ? 'Needs Improvements' : 'Poor Match' }}
+            </h3>
+            <p *ngIf="analysis.overallScore >= 85">Your resume matches almost all requirements for the target role. Excellent keyword density and structuring!</p>
+            <p *ngIf="analysis.overallScore >= 70 && analysis.overallScore < 85">Your profile is strong but has minor skill gaps. Review the suggestions to boost your score.</p>
+            <p *ngIf="analysis.overallScore >= 55 && analysis.overallScore < 70">You have a reasonable foundation, but are missing critical skill benchmarks. We suggest adding relevant projects.</p>
+            <p *ngIf="analysis.overallScore < 55">Significant gaps detected. Consider acquiring the missing required skills and optimizing formatting details.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score Breakdown Card -->
+      <div class="glass-card breakdown-card">
+        <h2>Scoring Dimensions</h2>
+        <p class="card-desc">Weight distribution across five essential evaluation layers.</p>
+
+        <div class="breakdown-list">
+          <!-- Dimension: Skill Coverage -->
+          <div class="breakdown-item">
+            <div class="breakdown-info">
+              <span class="breakdown-label">Skill Coverage (40%)</span>
+              <span class="breakdown-value">{{ analysis.scoreBreakdown.skillCoverage }} / 40</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar bar-blue" [style.width.%]="(analysis.scoreBreakdown.skillCoverage / 40) * 100"></div>
+            </div>
+          </div>
+
+          <!-- Dimension: Preferred Skills -->
+          <div class="breakdown-item">
+            <div class="breakdown-info">
+              <span class="breakdown-label">Preferred Skills (20%)</span>
+              <span class="breakdown-value">{{ analysis.scoreBreakdown.preferredSkills }} / 20</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar bar-yellow" [style.width.%]="(analysis.scoreBreakdown.preferredSkills / 20) * 100"></div>
+            </div>
+          </div>
+
+          <!-- Dimension: Structure Compliance -->
+          <div class="breakdown-item">
+            <div class="breakdown-info">
+              <span class="breakdown-label">Resume Structure (20%)</span>
+              <span class="breakdown-value">{{ analysis.scoreBreakdown.resumeStructure }} / 20</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar bar-green" [style.width.%]="(analysis.scoreBreakdown.resumeStructure / 20) * 100"></div>
+            </div>
+          </div>
+
+          <!-- Dimension: Content Quality -->
+          <div class="breakdown-item">
+            <div class="breakdown-info">
+              <span class="breakdown-label">Content Quality (10%)</span>
+              <span class="breakdown-value">{{ analysis.scoreBreakdown.contentQuality }} / 10</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar bar-indigo" [style.width.%]="(analysis.scoreBreakdown.contentQuality / 10) * 100"></div>
+            </div>
+          </div>
+
+          <!-- Dimension: Format Compliance -->
+          <div class="breakdown-item">
+            <div class="breakdown-info">
+              <span class="breakdown-label">Formatting & Length (10%)</span>
+              <span class="breakdown-value">{{ analysis.scoreBreakdown.formatCompliance }} / 10</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar bar-teal" [style.width.%]="(analysis.scoreBreakdown.formatCompliance / 10) * 100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Skills and Suggestions -->
+    <div class="right-col">
+      <!-- AI Actionable Suggestions -->
+      <div class="glass-card suggestions-card" *ngIf="analysis.suggestions && analysis.suggestions.length > 0">
+        <h2>Improvement Suggestions</h2>
+        <p class="card-desc">Apply these recommendations to increase ATS compliance and scoring.</p>
+
+        <ul class="suggestion-list">
+          <li *ngFor="let suggestion of analysis.suggestions">
+            <span class="suggestion-bullet">💡</span>
+            <span class="suggestion-text">{{ suggestion }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Skill Gap Analysis Card -->
+      <div class="glass-card skills-card">
+        <h2>Skill Diagnostics</h2>
+        <p class="card-desc">Detailed check on matching taxonomy and missing capabilities.</p>
+
+        <!-- Detected Skills Sections -->
+        <div class="skills-section">
+          <h3>Detected Competencies</h3>
+          <div class="category-group" *ngFor="let cat of detectedSkillsByCategory | keyvalue">
+            <h4 class="category-title">{{ cat.key }}</h4>
+            <div class="chips-container">
+              <span class="chip chip-detected" *ngFor="let skill of cat.value" [title]="'Confidence: ' + (skill.confidence | percent)">
+                {{ skill.name }}
+                <span class="chip-confidence" *ngIf="skill.confidence < 1.0">
+                  {{ skill.confidence | percent:'1.0-0' }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Missing Skills Sections -->
+        <div class="skills-section missing-section" *ngIf="analysis.missingSkills && analysis.missingSkills.length > 0">
+          <h3>Missing Role Benchmarks</h3>
+          <p class="missing-hint">Click on red links to open learning resources for these gaps.</p>
+          <div class="missing-list">
+            <div class="missing-item" *ngFor="let missing of analysis.missingSkills">
+              <div class="missing-item-header">
+                <span class="chip chip-missing">{{ missing.name }}</span>
+                <span class="missing-priority" [class.priority-required]="missing.priority === 'Required'">
+                  {{ missing.priority }}
+                </span>
+              </div>
+              <p class="missing-reason">{{ missing.reason }}</p>
+              <a [href]="missing.resourceUrl" target="_blank" class="learn-link">
+                📚 Study {{ missing.name }} Guide →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Perfect Fit State -->
+        <div class="perfect-fit" *ngIf="analysis.missingSkills && analysis.missingSkills.length === 0">
+          <span class="perfect-icon">🎉</span>
+          <h3>All benchmark skills met!</h3>
+          <p>Your resume contains all of the required and preferred skills specified in this template.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading indicator -->
+<div class="detail-loading-container" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Loading resume analysis report details...</p>
+</div>
+
+<!-- Error State -->
+<div class="detail-error-container" *ngIf="error">
+  <div class="alert alert-danger">
+    <h3>Analysis Load Failed</h3>
+    <p>{{ error }}</p>
+    <button (click)="loadAnalysis()" class="btn btn-primary mt-3">Retry</button>
+  </div>
+</div>

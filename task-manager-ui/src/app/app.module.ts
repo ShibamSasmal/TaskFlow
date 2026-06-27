@@ -10,6 +10,7 @@ import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ResumeAnalyzerModule } from './resume-analyzer/resume-analyzer.module';
 
 // Interceptor
 import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
@@ -25,7 +26,8 @@ import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
     SharedModule,
     AuthModule,
     TasksModule,
-    DashboardModule
+    DashboardModule,
+    ResumeAnalyzerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
