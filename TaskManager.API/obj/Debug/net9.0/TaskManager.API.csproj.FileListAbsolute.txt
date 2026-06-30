@@ -173,4 +173,9 @@ C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\runtimes\win-arm64
 C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\runtimes\win-x64\native\LdaNative.dll
 C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\runtimes\win-x86\native\LdaNative.dll
 C:\Users\HP\Desktop\TaskFlow\TaskManager.API\obj\Debug\net9.0\TaskManager.API.sourcelink.json
+C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\CsvHelper.dll
+C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\Namotion.Reflection.dll
+C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\NJsonSchema.dll
+C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\NJsonSchema.Annotations.dll
+C:\Users\HP\Desktop\TaskFlow\TaskManager.API\bin\Debug\net9.0\YamlDotNet.dll
 C:\Users\HP\Desktop\TaskFlow\TaskManager.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

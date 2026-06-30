@@ -20,27 +20,51 @@ namespace TaskManager.API.Helpers
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // 1. Seed Database Tables
-            await SeedTaxonomyAsync(context);
+            bool newlySeeded = await SeedTaxonomyAsync(context);
+
+            if (newlySeeded && File.Exists(modelPath))
+            {
+                Console.WriteLine("[ML.NET Setup] Taxonomy updated. Deleting existing model to force retrain...");
+                try
+                {
+                    File.Delete(modelPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ML.NET Setup] Failed to delete existing model file: {ex.Message}");
+                }
+            }
 
             // 2. Prepare training data and train ML.NET Model
-            await PrepareAndTrainMlModelAsync(csvPath, modelPath);
+            await PrepareAndTrainMlModelAsync(csvPath, modelPath, newlySeeded);
         }
 
-        private static async Task SeedTaxonomyAsync(AppDbContext context)
+        private static async Task<bool> SeedTaxonomyAsync(AppDbContext context)
         {
-            // Seed Skill Categories
-            if (!await context.SkillCategories.AnyAsync())
-            {
-                var categories = new List<SkillCategory>
-                {
-                    new() { Name = "Programming Languages", Description = "Core language competencies" },
-                    new() { Name = "Frameworks & Libraries", Description = "Development platforms and libraries" },
-                    new() { Name = "Databases & Storage", Description = "Relational and NoSQL storage systems" },
-                    new() { Name = "Cloud & Tools", Description = "Deployment platforms, version control, and environments" },
-                    new() { Name = "Soft Skills & Methods", Description = "Methodologies and interpersonal competencies" }
-                };
+            bool databaseUpdated = false;
 
-                context.SkillCategories.AddRange(categories);
+            // Seed Skill Categories
+            var existingCategories = await context.SkillCategories.ToListAsync();
+            var categoriesToSeed = new List<SkillCategory>
+            {
+                new() { Name = "Programming Languages", Description = "Core language competencies" },
+                new() { Name = "Frameworks & Libraries", Description = "Development platforms and libraries" },
+                new() { Name = "Databases & Storage", Description = "Relational and NoSQL storage systems" },
+                new() { Name = "Cloud & Tools", Description = "Deployment platforms, version control, and environments" },
+                new() { Name = "Soft Skills & Methods", Description = "Methodologies and interpersonal competencies" }
+            };
+
+            foreach (var cat in categoriesToSeed)
+            {
+                if (!existingCategories.Any(c => c.Name.Equals(cat.Name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    context.SkillCategories.Add(cat);
+                    databaseUpdated = true;
+                }
+            }
+
+            if (databaseUpdated)
+            {
                 await context.SaveChangesAsync();
             }
 
@@ -51,112 +75,177 @@ namespace TaskManager.API.Helpers
             var catSoftSkills = await context.SkillCategories.FirstAsync(c => c.Name == "Soft Skills & Methods");
 
             // Seed Skills
-            if (!await context.Skills.AnyAsync())
+            var existingSkills = await context.Skills.ToListAsync();
+            var skillsToSeed = new List<Skill>
             {
-                var skills = new List<Skill>
+                new() { Name = "C#", CategoryId = catLanguages.Id, Aliases = "c#,csharp,c sharp,.net" },
+                new() { Name = "Java", CategoryId = catLanguages.Id, Aliases = "java,spring" },
+                new() { Name = "Python", CategoryId = catLanguages.Id, Aliases = "python,py" },
+                new() { Name = "JavaScript", CategoryId = catLanguages.Id, Aliases = "javascript,js,es6" },
+                new() { Name = "TypeScript", CategoryId = catLanguages.Id, Aliases = "typescript,ts" },
+                new() { Name = "HTML", CategoryId = catLanguages.Id, Aliases = "html,html5" },
+                new() { Name = "CSS", CategoryId = catLanguages.Id, Aliases = "css,css3,scss,sass" },
+
+                new() { Name = "ASP.NET Core", CategoryId = catFrameworks.Id, Aliases = "asp.net core,asp.net,dotnet core" },
+                new() { Name = "Angular", CategoryId = catFrameworks.Id, Aliases = "angular,ng" },
+                new() { Name = "React", CategoryId = catFrameworks.Id, Aliases = "react,reactjs" },
+                new() { Name = "Spring Boot", CategoryId = catFrameworks.Id, Aliases = "spring boot,springboot" },
+                new() { Name = "RxJS", CategoryId = catFrameworks.Id, Aliases = "rxjs" },
+                new() { Name = "Machine Learning", CategoryId = catFrameworks.Id, Aliases = "machine learning,ml,deep learning,artificial intelligence,ai" },
+                new() { Name = "PyTorch", CategoryId = catFrameworks.Id, Aliases = "pytorch,torch" },
+                new() { Name = "TensorFlow", CategoryId = catFrameworks.Id, Aliases = "tensorflow,keras" },
+                new() { Name = "Scikit-learn", CategoryId = catFrameworks.Id, Aliases = "scikit-learn,sklearn,scikit learn" },
+                new() { Name = "Pandas", CategoryId = catFrameworks.Id, Aliases = "pandas" },
+                new() { Name = "NumPy", CategoryId = catFrameworks.Id, Aliases = "numpy" },
+
+                new() { Name = "SQL", CategoryId = catDatabases.Id, Aliases = "sql,mysql,sqlite,query" },
+                new() { Name = "PostgreSQL", CategoryId = catDatabases.Id, Aliases = "postgresql,postgres" },
+                new() { Name = "SQL Server", CategoryId = catDatabases.Id, Aliases = "sql server,mssql" },
+                new() { Name = "MongoDB", CategoryId = catDatabases.Id, Aliases = "mongodb,mongo" },
+                new() { Name = "Redis", CategoryId = catDatabases.Id, Aliases = "redis" },
+
+                new() { Name = "Docker", CategoryId = catCloudTools.Id, Aliases = "docker,containers" },
+                new() { Name = "Kubernetes", CategoryId = catCloudTools.Id, Aliases = "kubernetes,k8s,k8" },
+                new() { Name = "Azure", CategoryId = catCloudTools.Id, Aliases = "azure" },
+                new() { Name = "AWS", CategoryId = catCloudTools.Id, Aliases = "aws,amazon web services" },
+                new() { Name = "Git", CategoryId = catCloudTools.Id, Aliases = "git,github,version control" },
+                new() { Name = "CI/CD", CategoryId = catCloudTools.Id, Aliases = "ci/cd,jenkins,github actions,pipelines" },
+                new() { Name = "Microservices", CategoryId = catCloudTools.Id, Aliases = "microservices,microservice" },
+
+                new() { Name = "Communication", CategoryId = catSoftSkills.Id, Aliases = "communication,presentation,written" },
+                new() { Name = "Leadership", CategoryId = catSoftSkills.Id, Aliases = "leadership,team lead,manager" },
+                new() { Name = "Problem-solving", CategoryId = catSoftSkills.Id, Aliases = "problem-solving,problem solving,analytical" },
+                new() { Name = "Agile", CategoryId = catSoftSkills.Id, Aliases = "agile,scrum,kanban" }
+            };
+
+            bool skillsUpdated = false;
+            foreach (var skill in skillsToSeed)
+            {
+                if (!existingSkills.Any(s => s.Name.Equals(skill.Name, StringComparison.OrdinalIgnoreCase)))
                 {
-                    new() { Name = "C#", CategoryId = catLanguages.Id, Aliases = "c#,csharp,c sharp,.net" },
-                    new() { Name = "Java", CategoryId = catLanguages.Id, Aliases = "java,spring" },
-                    new() { Name = "Python", CategoryId = catLanguages.Id, Aliases = "python,py" },
-                    new() { Name = "JavaScript", CategoryId = catLanguages.Id, Aliases = "javascript,js,es6" },
-                    new() { Name = "TypeScript", CategoryId = catLanguages.Id, Aliases = "typescript,ts" },
-                    new() { Name = "HTML", CategoryId = catLanguages.Id, Aliases = "html,html5" },
-                    new() { Name = "CSS", CategoryId = catLanguages.Id, Aliases = "css,css3,scss,sass" },
+                    context.Skills.Add(skill);
+                    skillsUpdated = true;
+                    databaseUpdated = true;
+                }
+            }
 
-                    new() { Name = "ASP.NET Core", CategoryId = catFrameworks.Id, Aliases = "asp.net core,asp.net,dotnet core" },
-                    new() { Name = "Angular", CategoryId = catFrameworks.Id, Aliases = "angular,ng" },
-                    new() { Name = "React", CategoryId = catFrameworks.Id, Aliases = "react,reactjs" },
-                    new() { Name = "Spring Boot", CategoryId = catFrameworks.Id, Aliases = "spring boot,springboot" },
-                    new() { Name = "RxJS", CategoryId = catFrameworks.Id, Aliases = "rxjs" },
-
-                    new() { Name = "SQL", CategoryId = catDatabases.Id, Aliases = "sql,mysql,sqlite,query" },
-                    new() { Name = "PostgreSQL", CategoryId = catDatabases.Id, Aliases = "postgresql,postgres" },
-                    new() { Name = "SQL Server", CategoryId = catDatabases.Id, Aliases = "sql server,mssql" },
-                    new() { Name = "MongoDB", CategoryId = catDatabases.Id, Aliases = "mongodb,mongo" },
-                    new() { Name = "Redis", CategoryId = catDatabases.Id, Aliases = "redis" },
-
-                    new() { Name = "Docker", CategoryId = catCloudTools.Id, Aliases = "docker,containers" },
-                    new() { Name = "Kubernetes", CategoryId = catCloudTools.Id, Aliases = "kubernetes,k8s,k8" },
-                    new() { Name = "Azure", CategoryId = catCloudTools.Id, Aliases = "azure" },
-                    new() { Name = "AWS", CategoryId = catCloudTools.Id, Aliases = "aws,amazon web services" },
-                    new() { Name = "Git", CategoryId = catCloudTools.Id, Aliases = "git,github,version control" },
-                    new() { Name = "CI/CD", CategoryId = catCloudTools.Id, Aliases = "ci/cd,jenkins,github actions,pipelines" },
-                    new() { Name = "Microservices", CategoryId = catCloudTools.Id, Aliases = "microservices,microservice" },
-
-                    new() { Name = "Communication", CategoryId = catSoftSkills.Id, Aliases = "communication,presentation,written" },
-                    new() { Name = "Leadership", CategoryId = catSoftSkills.Id, Aliases = "leadership,team lead,manager" },
-                    new() { Name = "Problem-solving", CategoryId = catSoftSkills.Id, Aliases = "problem-solving,problem solving,analytical" },
-                    new() { Name = "Agile", CategoryId = catSoftSkills.Id, Aliases = "agile,scrum,kanban" }
-                };
-
-                context.Skills.AddRange(skills);
+            if (skillsUpdated)
+            {
                 await context.SaveChangesAsync();
             }
 
-            // Seed Role Templates and RoleSkills
-            if (!await context.RoleTemplates.AnyAsync())
+            // Seed Role Templates
+            var existingRoles = await context.RoleTemplates.ToListAsync();
+            var rolesToSeed = new List<RoleTemplate>
             {
-                var backendRole = new RoleTemplate { RoleName = "Backend Developer", Description = "Core backend focus" };
-                var frontendRole = new RoleTemplate { RoleName = "Frontend Developer", Description = "Core frontend SPA focus" };
-                var fullstackRole = new RoleTemplate { RoleName = "Full Stack Developer", Description = "Unified fullstack development" };
+                new() { RoleName = "Backend Developer", Description = "Core backend focus" },
+                new() { RoleName = "Frontend Developer", Description = "Core frontend SPA focus" },
+                new() { RoleName = "Full Stack Developer", Description = "Unified fullstack development" },
+                new() { RoleName = "AI/ML Engineer", Description = "Machine Learning and Artificial Intelligence focus" }
+            };
 
-                context.RoleTemplates.AddRange(backendRole, frontendRole, fullstackRole);
-                await context.SaveChangesAsync();
-
-                var allSkills = await context.Skills.ToListAsync();
-                var skillMap = allSkills.ToDictionary(s => s.Name, StringComparer.OrdinalIgnoreCase);
-
-                // Helper to add RoleSkill
-                void AddRoleSkill(RoleTemplate role, string skillName, bool isRequired)
+            bool rolesUpdated = false;
+            foreach (var role in rolesToSeed)
+            {
+                if (!existingRoles.Any(r => r.RoleName.Equals(role.RoleName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    if (skillMap.TryGetValue(skillName, out var s))
+                    context.RoleTemplates.Add(role);
+                    rolesUpdated = true;
+                    databaseUpdated = true;
+                }
+            }
+
+            if (rolesUpdated)
+            {
+                await context.SaveChangesAsync();
+            }
+
+            // Re-fetch all template roles and skills to build dictionary maps
+            var dbRoles = await context.RoleTemplates.ToListAsync();
+            var dbSkills = await context.Skills.ToListAsync();
+            var skillMap = dbSkills.ToDictionary(s => s.Name, StringComparer.OrdinalIgnoreCase);
+
+            var backendRole = dbRoles.First(r => r.RoleName == "Backend Developer");
+            var frontendRole = dbRoles.First(r => r.RoleName == "Frontend Developer");
+            var fullstackRole = dbRoles.First(r => r.RoleName == "Full Stack Developer");
+            var aimlRole = dbRoles.First(r => r.RoleName == "AI/ML Engineer");
+
+            // Seed RoleSkills
+            var existingRoleSkills = await context.RoleSkills.ToListAsync();
+            bool roleSkillsUpdated = false;
+
+            void AddRoleSkillIfMissing(RoleTemplate role, string skillName, bool isRequired)
+            {
+                if (skillMap.TryGetValue(skillName, out var skill))
+                {
+                    bool exists = existingRoleSkills.Any(rs => rs.RoleTemplateId == role.Id && rs.SkillId == skill.Id);
+                    if (!exists)
                     {
                         context.RoleSkills.Add(new RoleSkill
                         {
                             RoleTemplateId = role.Id,
-                            SkillId = s.Id,
+                            SkillId = skill.Id,
                             IsRequired = isRequired
                         });
+                        roleSkillsUpdated = true;
+                        databaseUpdated = true;
                     }
                 }
+            }
 
-                // Backend Developer mapping
-                AddRoleSkill(backendRole, "C#", true);
-                AddRoleSkill(backendRole, "ASP.NET Core", true);
-                AddRoleSkill(backendRole, "SQL", true);
-                AddRoleSkill(backendRole, "Git", true);
-                AddRoleSkill(backendRole, "Docker", false);
-                AddRoleSkill(backendRole, "Azure", false);
-                AddRoleSkill(backendRole, "Redis", false);
-                AddRoleSkill(backendRole, "Microservices", false);
-                AddRoleSkill(backendRole, "CI/CD", false);
+            // Backend Developer mapping
+            AddRoleSkillIfMissing(backendRole, "C#", true);
+            AddRoleSkillIfMissing(backendRole, "ASP.NET Core", true);
+            AddRoleSkillIfMissing(backendRole, "SQL", true);
+            AddRoleSkillIfMissing(backendRole, "Git", true);
+            AddRoleSkillIfMissing(backendRole, "Docker", false);
+            AddRoleSkillIfMissing(backendRole, "Azure", false);
+            AddRoleSkillIfMissing(backendRole, "Redis", false);
+            AddRoleSkillIfMissing(backendRole, "Microservices", false);
+            AddRoleSkillIfMissing(backendRole, "CI/CD", false);
 
-                // Frontend Developer mapping
-                AddRoleSkill(frontendRole, "Angular", true);
-                AddRoleSkill(frontendRole, "TypeScript", true);
-                AddRoleSkill(frontendRole, "JavaScript", true);
-                AddRoleSkill(frontendRole, "Git", true);
-                AddRoleSkill(frontendRole, "HTML", true);
-                AddRoleSkill(frontendRole, "CSS", true);
-                AddRoleSkill(frontendRole, "React", false);
-                AddRoleSkill(frontendRole, "RxJS", false);
+            // Frontend Developer mapping
+            AddRoleSkillIfMissing(frontendRole, "Angular", true);
+            AddRoleSkillIfMissing(frontendRole, "TypeScript", true);
+            AddRoleSkillIfMissing(frontendRole, "JavaScript", true);
+            AddRoleSkillIfMissing(frontendRole, "Git", true);
+            AddRoleSkillIfMissing(frontendRole, "HTML", true);
+            AddRoleSkillIfMissing(frontendRole, "CSS", true);
+            AddRoleSkillIfMissing(frontendRole, "React", false);
+            AddRoleSkillIfMissing(frontendRole, "RxJS", false);
 
-                // Full Stack Developer mapping
-                AddRoleSkill(fullstackRole, "C#", true);
-                AddRoleSkill(fullstackRole, "Angular", true);
-                AddRoleSkill(fullstackRole, "SQL", true);
-                AddRoleSkill(fullstackRole, "TypeScript", true);
-                AddRoleSkill(fullstackRole, "Git", true);
-                AddRoleSkill(fullstackRole, "ASP.NET Core", false);
-                AddRoleSkill(fullstackRole, "Docker", false);
-                AddRoleSkill(fullstackRole, "Azure", false);
-                AddRoleSkill(fullstackRole, "Redis", false);
+            // Full Stack Developer mapping
+            AddRoleSkillIfMissing(fullstackRole, "C#", true);
+            AddRoleSkillIfMissing(fullstackRole, "Angular", true);
+            AddRoleSkillIfMissing(fullstackRole, "SQL", true);
+            AddRoleSkillIfMissing(fullstackRole, "TypeScript", true);
+            AddRoleSkillIfMissing(fullstackRole, "Git", true);
+            AddRoleSkillIfMissing(fullstackRole, "ASP.NET Core", false);
+            AddRoleSkillIfMissing(fullstackRole, "Docker", false);
+            AddRoleSkillIfMissing(fullstackRole, "Azure", false);
+            AddRoleSkillIfMissing(fullstackRole, "Redis", false);
 
+            // AI/ML Engineer mapping
+            AddRoleSkillIfMissing(aimlRole, "Python", true);
+            AddRoleSkillIfMissing(aimlRole, "Machine Learning", true);
+            AddRoleSkillIfMissing(aimlRole, "PyTorch", true);
+            AddRoleSkillIfMissing(aimlRole, "TensorFlow", true);
+            AddRoleSkillIfMissing(aimlRole, "Git", true);
+            AddRoleSkillIfMissing(aimlRole, "Scikit-learn", false);
+            AddRoleSkillIfMissing(aimlRole, "Pandas", false);
+            AddRoleSkillIfMissing(aimlRole, "NumPy", false);
+            AddRoleSkillIfMissing(aimlRole, "SQL", false);
+            AddRoleSkillIfMissing(aimlRole, "Docker", false);
+
+            if (roleSkillsUpdated)
+            {
                 await context.SaveChangesAsync();
             }
+
+            return databaseUpdated;
         }
 
-        private static async Task PrepareAndTrainMlModelAsync(string csvPath, string modelPath)
+        private static async Task PrepareAndTrainMlModelAsync(string csvPath, string modelPath, bool forceRewrite)
         {
             var dir = Path.GetDirectoryName(csvPath);
             if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
@@ -164,8 +253,8 @@ namespace TaskManager.API.Helpers
                 Directory.CreateDirectory(dir);
             }
 
-            // Create Seed training data CSV if missing
-            if (!File.Exists(csvPath))
+            // Create Seed training data CSV if missing or forced
+            if (!File.Exists(csvPath) || forceRewrite)
             {
                 var trainingSamples = new List<(string Text, string Label)>
                 {
@@ -210,7 +299,27 @@ namespace TaskManager.API.Helpers
                     ("Data analysis scripting utilizing Python and numpy.", "Python"),
                     ("Created clean user interfaces with HTML and CSS.", "HTML"),
                     ("Developed beautiful layouts using HTML5 and SCSS styles.", "CSS"),
-                    ("Designed responsive flexbox layout grids using custom CSS.", "CSS")
+                    ("Designed responsive flexbox layout grids using custom CSS.", "CSS"),
+
+                    // AI/ML Engineer training samples
+                    ("Developed machine learning models and neural networks.", "Machine Learning"),
+                    ("Deep learning architecture design and AI solutions.", "Machine Learning"),
+                    ("Built and evaluated classification algorithms for predictive analytics.", "Machine Learning"),
+                    ("Trained deep learning models using PyTorch frameworks.", "PyTorch"),
+                    ("Implemented neural network layers and training loops in PyTorch.", "PyTorch"),
+                    ("Optimized tensor computations and GPU execution with PyTorch.", "PyTorch"),
+                    ("Built convolutional neural networks using TensorFlow and Keras.", "TensorFlow"),
+                    ("Deployed TensorFlow models to production environments.", "TensorFlow"),
+                    ("Utilized TensorFlow for natural language processing and computer vision.", "TensorFlow"),
+                    ("Engineered feature pipelines using Scikit-learn.", "Scikit-learn"),
+                    ("Trained random forests and support vector machines in Scikit-learn.", "Scikit-learn"),
+                    ("Model evaluation, cross validation, and hyperparameter tuning with Scikit-learn.", "Scikit-learn"),
+                    ("Data manipulation and analysis using Python Pandas library.", "Pandas"),
+                    ("Performed data cleaning, aggregation, and merging with Pandas.", "Pandas"),
+                    ("Loaded and structured complex datasets into Pandas DataFrames.", "Pandas"),
+                    ("Numerical computing and matrix operations using NumPy.", "NumPy"),
+                    ("Optimized array processing and vectorized operations with NumPy.", "NumPy"),
+                    ("Mathematical functions and linear algebra computing with NumPy.", "NumPy")
                 };
 
                 using var writer = new StreamWriter(csvPath);
@@ -221,7 +330,7 @@ namespace TaskManager.API.Helpers
                     await writer.WriteLineAsync($"{escapedText},{sample.Label}");
                 }
 
-                Console.WriteLine($"[ML.NET Setup] Created training data CSV at: {csvPath}");
+                Console.WriteLine($"[ML.NET Setup] Created/Updated training data CSV at: {csvPath}");
             }
 
             // Train model if zip file is missing

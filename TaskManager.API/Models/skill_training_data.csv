@@ -41,3 +41,21 @@ ResumeText,SkillLabel
 "Created clean user interfaces with HTML and CSS.",HTML
 "Developed beautiful layouts using HTML5 and SCSS styles.",CSS
 "Designed responsive flexbox layout grids using custom CSS.",CSS
+"Developed machine learning models and neural networks.",Machine Learning
+"Deep learning architecture design and AI solutions.",Machine Learning
+"Built and evaluated classification algorithms for predictive analytics.",Machine Learning
+"Trained deep learning models using PyTorch frameworks.",PyTorch
+"Implemented neural network layers and training loops in PyTorch.",PyTorch
+"Optimized tensor computations and GPU execution with PyTorch.",PyTorch
+"Built convolutional neural networks using TensorFlow and Keras.",TensorFlow
+"Deployed TensorFlow models to production environments.",TensorFlow
+"Utilized TensorFlow for natural language processing and computer vision.",TensorFlow
+"Engineered feature pipelines using Scikit-learn.",Scikit-learn
+"Trained random forests and support vector machines in Scikit-learn.",Scikit-learn
+"Model evaluation, cross validation, and hyperparameter tuning with Scikit-learn.",Scikit-learn
+"Data manipulation and analysis using Python Pandas library.",Pandas
+"Performed data cleaning, aggregation, and merging with Pandas.",Pandas
+"Loaded and structured complex datasets into Pandas DataFrames.",Pandas
+"Numerical computing and matrix operations using NumPy.",NumPy
+"Optimized array processing and vectorized operations with NumPy.",NumPy
+"Mathematical functions and linear algebra computing with NumPy.",NumPy

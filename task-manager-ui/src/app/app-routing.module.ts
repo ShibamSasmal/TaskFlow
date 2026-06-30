@@ -8,6 +8,7 @@ import { TaskFormComponent } from './tasks/task-form/task-form.component';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { ResumeAnalyzerComponent } from './resume-analyzer/resume-analyzer.component';
 import { AnalysisDetailComponent } from './resume-analyzer/analysis-detail.component';
+import { JsonExplorerComponent } from './json-explorer/json-explorer.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -39,6 +40,11 @@ const routes: Routes = [
       { path: '', component: ResumeAnalyzerComponent },
       { path: 'analysis/:id', component: AnalysisDetailComponent }
     ]
+  },
+  {
+    path: 'json-explorer',
+    component: JsonExplorerComponent,
+    canActivate: [AuthGuard]
   },
   { path: '**', redirectTo: '/dashboard' }
 ];

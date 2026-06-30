@@ -30,6 +30,7 @@ builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddSingleton<JwtHelper>();
+builder.Services.AddScoped<IJsonExplorerService, JsonExplorerService>();
 
 // Register Resume Analyzer Services
 var modelPath = Path.Combine(builder.Environment.ContentRootPath, "models", "skill_model.zip");

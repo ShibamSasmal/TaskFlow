@@ -37,7 +37,13 @@ namespace TaskManager.API.Services
             { "HTML", "https://developer.mozilla.org/en-US/docs/Web/HTML" },
             { "CSS", "https://developer.mozilla.org/en-US/docs/Web/CSS" },
             { "CI/CD", "https://resources.github.com/devops/fundamentals/ci-cd/" },
-            { "DevOps", "https://azure.microsoft.com/en-us/solutions/devops/what-is-devops/" }
+            { "DevOps", "https://azure.microsoft.com/en-us/solutions/devops/what-is-devops/" },
+            { "Machine Learning", "https://developers.google.com/machine-learning/crash-course" },
+            { "PyTorch", "https://pytorch.org/docs/stable/index.html" },
+            { "TensorFlow", "https://www.tensorflow.org/api_docs" },
+            { "Scikit-learn", "https://scikit-learn.org/stable/documentation.html" },
+            { "Pandas", "https://pandas.pydata.org/docs/" },
+            { "NumPy", "https://numpy.org/doc/" }
         };
 
         public SuggestionService(AppDbContext context)
@@ -148,7 +154,7 @@ namespace TaskManager.API.Services
             if (missingSkills.Any(m => m.Priority == "Required"))
             {
                 var reqSkillsList = string.Join(", ", missingSkills.Where(m => m.Priority == "Required").Take(3).Select(m => m.Name));
-                suggestions.Add($"Consider adding projects or experience demonstrating skills in: {reqSkillsList} to align with backend role expectations.");
+                suggestions.Add($"Consider adding projects or experience demonstrating skills in: {reqSkillsList} to align with {targetRole} expectations.");
             }
 
             return (missingSkills.OrderBy(m => m.Priority == "Required" ? 0 : 1).ToList(), suggestions);

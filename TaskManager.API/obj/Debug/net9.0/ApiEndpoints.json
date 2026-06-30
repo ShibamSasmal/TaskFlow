@@ -42,6 +42,262 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Codegen",
+    "RelativePath": "api/JsonExplorer/codegen",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.CodeGenRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Compare",
+    "RelativePath": "api/JsonExplorer/compare",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.CompareRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "CsvToJson",
+    "RelativePath": "api/JsonExplorer/csv-to-json",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.ConversionRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "ExcelToJson",
+    "RelativePath": "api/JsonExplorer/excel-to-json",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Flatten",
+    "RelativePath": "api/JsonExplorer/flatten",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.FormatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Format",
+    "RelativePath": "api/JsonExplorer/format",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.FormatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Mask",
+    "RelativePath": "api/JsonExplorer/mask",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.MaskRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Minify",
+    "RelativePath": "api/JsonExplorer/minify",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.FormatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "ProxyGet",
+    "RelativePath": "api/JsonExplorer/proxy",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "url",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "GenerateSchema",
+    "RelativePath": "api/JsonExplorer/schema",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.FormatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Statistics",
+    "RelativePath": "api/JsonExplorer/statistics",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.FormatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Unflatten",
+    "RelativePath": "api/JsonExplorer/unflatten",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.FormatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "Validate",
+    "RelativePath": "api/JsonExplorer/validate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.ValidateRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "ValidateSchema",
+    "RelativePath": "api/JsonExplorer/validate-schema",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.SchemaValidationRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "XmlToJson",
+    "RelativePath": "api/JsonExplorer/xml-to-json",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.ConversionRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TaskManager.API.Controllers.JsonExplorerController",
+    "Method": "YamlToJson",
+    "RelativePath": "api/JsonExplorer/yaml-to-json",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TaskManager.API.DTOs.ConversionRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "TaskManager.API.Controllers.ResumeController",
     "Method": "GetAnalysis",
     "RelativePath": "api/Resume/analysis/{id}",

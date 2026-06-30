@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './tasks/tasks.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ResumeAnalyzerModule } from './resume-analyzer/resume-analyzer.module';
+import { JsonExplorerModule } from './json-explorer/json-explorer.module';
 
 // Interceptor
 import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
@@ -27,7 +28,8 @@ import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
     AuthModule,
     TasksModule,
     DashboardModule,
-    ResumeAnalyzerModule
+    ResumeAnalyzerModule,
+    JsonExplorerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
